@@ -31,13 +31,6 @@
           @dragenter.prevent
           @drop="ondropitem($event, 'first')"
         >
-          <!-- :class="{ selected: isSelected(column.label) }"
-            v-for="column in hideColumns"
-            :key="column.key"
-            :data-order="column.order"
-            @dragstart="dragStart($event, column)"
-            @click="onItemClick(column)"
-            draggable -->
           <div
             class="column"
             v-for="(item, index) in items"
@@ -55,9 +48,11 @@
                 height="12px"
                 role="presentation"
               /> -->
+              <font-awesome-icon icon="fa-solid fa-grip" />
               <p>{{ item.label }}</p>
             </div>
             <span class="pointer">
+              <font-awesome-icon icon="fa-solid fa-xmark" />
               <!-- <svg-icon
                 icon="icon-column-add"
                 width="14px"
@@ -107,6 +102,7 @@
             @click="onItemClick(item.id)"
           >
             <div class="column__name">
+              <font-awesome-icon icon="fa-solid fa-grip" />
               <!-- <svg-icon
                 icon="icon-DragNDrop"
                 width="12px"
@@ -116,6 +112,7 @@
               <p>{{ item.label }}</p>
             </div>
             <span class="pointer">
+              <font-awesome-icon icon="fa-solid fa-check" />
               <!-- <svg-icon
                 icon="icon-column-hide"
                 width="14px"

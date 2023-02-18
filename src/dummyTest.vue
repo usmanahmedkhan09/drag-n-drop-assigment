@@ -6,12 +6,7 @@
       class="table-title__customize"
       @click="showSelector"
     >
-      <!-- <svg-icon
-        icon="icon-columns"
-        width="18px"
-        height="18px"
-        role="presentation"
-      /> -->
+      <font-awesome-icon icon="fa-solid fa-table-columns" />
       <span>Open Dialog</span>
     </div>
 
@@ -163,7 +158,6 @@ export default {
       this.selectedColumns.forEach((column) => {
         columns.push(this.defaultColumns.filter((col) => col.id == column)[0]);
       });
-      console.log(columns)
       return columns;
     },
   },
