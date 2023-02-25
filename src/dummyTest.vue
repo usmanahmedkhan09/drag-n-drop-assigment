@@ -1,23 +1,21 @@
 <template>
   <div>
-    <div
-      role="button"
-      tabindex="0"
-      class="table-title__customize"
-      @click="showSelector"
-    >
+    <div role="button"
+         tabindex="0"
+         class="table-title__customize"
+         @click="showSelector">
       <font-awesome-icon icon="fa-solid fa-table-columns" />
       <span>Open Dialog</span>
     </div>
 
     <div>
-      <el-table :data="tableData" style="width: 100%" v-if="refresh">
-        <el-table-column
-          v-for="(column, index) in columns"
-          :key="index"
-          :label="column.label"
-          :prop="column.prop"
-        >
+      <el-table :data="tableData"
+                style="width: 100%"
+                v-if="refresh">
+        <el-table-column v-for="(column, index) in columns"
+                         :key="index"
+                         :label="column.label"
+                         :prop="column.prop">
           <template #default="{ row }">
             <template>
               {{ row[column.prop] }}
@@ -26,29 +24,25 @@
         </el-table-column>
       </el-table>
     </div>
-    <ColumnSelector
-      :showColumnSelector="showColumnSelector"
-      :defaultColumns="defaultColumns"
-      :selectedColumns="selectedColumns"
-      :defaultColumnsKeys="defaultColumnsKeys"
-      @changeTableColumns="changeTableColumns"
-      @closeColumnSelector="closeColumnSelector"
-      customClass="accessSearch"
-    />
+    <ColumnSelector :showColumnSelector="showColumnSelector"
+                    :defaultColumns="defaultColumns"
+                    :selectedColumns="selectedColumns"
+                    :defaultColumnsKeys="defaultColumnsKeys"
+                    @changeTableColumns="changeTableColumns"
+                    @closeColumnSelector="closeColumnSelector"
+                    customClass="accessSearch" />
     <!-- <HelloWorld
       :defaultColumns="defaultColumns"
       @changeTableColumns="changeTableColumns"
     /> -->
     <!-- <keep-alive>
-      <column-selector-2
-        :showColumnSelector="showColumnSelector"
-        :defaultColumns="defaultColumns"
-        :selectedColumns="selectedColumns"
-        :defaultColumnsKeys="defaultColumnsKeys"
-        @changeTableColumns="changeTableColumns"
-        @closeColumnSelector="closeColumnSelector"
-        customClass="accessSearch"
-      />
+      <column-selector-2 :showColumnSelector="showColumnSelector"
+                         :defaultColumns="defaultColumns"
+                         :selectedColumns="selectedColumns"
+                         :defaultColumnsKeys="defaultColumnsKeys"
+                         @changeTableColumns="changeTableColumns"
+                         @closeColumnSelector="closeColumnSelector"
+                         customClass="accessSearch" />
     </keep-alive> -->
   </div>
 </template>
@@ -61,25 +55,29 @@ export default {
   name: "dummyTest",
   components: {
     // ColumnSelector2,
-    ColumnSelector,
+    ColumnSelector
     // HelloWorld,
   },
-  data() {
+  data()
+  {
     return {
-      refresh : true,
+      refresh: true,
       selectedColumns: [1, 2, 3, 4, 5, 6],
       defaultColumnsKeys: [1, 2, 3, 4, 5, 6],
       showColumnSelector: false,
     };
   },
   methods: {
-    showSelector() {
+    showSelector()
+    {
       this.showColumnSelector = true;
     },
-    closeColumnSelector() {
+    closeColumnSelector()
+    {
       this.showColumnSelector = false;
     },
-    changeTableColumns(updatedColumns) {
+    changeTableColumns(updatedColumns)
+    {
       this.refresh = false
       this.selectedColumns = [];
       this.selectedColumns = [...updatedColumns];
@@ -88,7 +86,8 @@ export default {
     },
   },
   computed: {
-    tableData() {
+    tableData()
+    {
       let apidata = [
         {
           billCycle: "25",
@@ -125,7 +124,8 @@ export default {
       ];
       return JSON.parse(JSON.stringify(apidata));
     },
-    defaultColumns() {
+    defaultColumns()
+    {
       return [
         { id: 1, label: "Type", prop: "type", width: "110px", },
         {
@@ -153,9 +153,11 @@ export default {
         { id: 6, label: "Status", prop: "status", width: "180px", },
       ];
     },
-    columns() {
+    columns()
+    {
       let columns = [];
-      this.selectedColumns.forEach((column) => {
+      this.selectedColumns.forEach((column) =>
+      {
         columns.push(this.defaultColumns.filter((col) => col.id == column)[0]);
       });
       return columns;

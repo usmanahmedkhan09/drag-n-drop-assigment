@@ -66,6 +66,7 @@
       border-bottom: 1px solid #ffffff;
 
       &__name {
+        flex: calc(100% / 2);
         display: flex;
         gap: 10px;
         align-items: center;

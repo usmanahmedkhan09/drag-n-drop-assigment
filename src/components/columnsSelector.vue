@@ -1,64 +1,51 @@
 <template>
-  <el-dialog
-    title="EditColumns"
-    :before-close="handleClose"
-    :visible.sync="showColumnSelector"
-    :append-to-body="true"
-    class="columnSelector"
-    :width="'585px'"
-    @opened="handleOpen"
-    :destroy-on-close="true"
-  >
-    <div class="column-selector" :class="customClass ? customClass : ''">
+  <el-dialog title="EditColumns"
+             :before-close="handleClose"
+             :visible.sync="showColumnSelector"
+             :append-to-body="true"
+             class="columnSelector"
+             :width="'585px'"
+             @opened="handleOpen"
+             :destroy-on-close="true">
+    <div class="column-selector"
+         :class="customClass ? customClass : ''">
       <div>
         <div class="section-header">
           <p class="heading">
             Hidden Columns
             <span class="subHeader">({{ hideColumns }})</span>
           </p>
-          <p class="select-button" @click="selectAllHiddenColumns">
+          <p class="select-button"
+             @click="selectAllHiddenColumns">
             {{
               hideColumnsSelectAll && items.length != 0
-                ? "Deselect all"
-                : "Select all"
+              ? "Deselect all"
+              : "Select all"
             }}
           </p>
         </div>
-        <div
-          id="hide-columns"
-          class="container"
-          @dragover.prevent
-          @dragenter.prevent
-          @drop="ondropitem($event, 'first')"
-        >
-          <div
-            class="column"
-            v-for="(item, index) in items"
-            :key="index"
-            :class="{ selected: isSelected(item.id) }"
-            :draggable="true"
-            @dragstart="onDragStart(item, index, $event, 'items')"
-            @drop.stop="dropOnChild(item, index, $event)"
-            @click="onItemClick(item.id)"
-          >
+        <!-- @dragover="handleDragOver($event, 'first')" -->
+        <!-- @dragenter.prevent -->
+        <div id="hide-columns"
+             class="container"
+             @dragover.prevent="handleDragOver($event)"
+             @dragenter.prevent
+             @drop="ondropitem($event, 'first')">
+
+          <div class="column"
+               v-for="(item, index) in items"
+               :key="index"
+               :class="{ selected: isSelected(item.id) }"
+               :draggable="true"
+               @dragstart="onDragStart(item, index, $event, 'items')"
+               @drop.stop="dropOnChild(item, index, $event)"
+               @click="onItemClick(item.id)">
             <div class="column__name">
-              <!-- <svg-icon
-                icon="icon-DragNDrop"
-                width="12px"
-                height="12px"
-                role="presentation"
-              /> -->
               <font-awesome-icon icon="fa-solid fa-grip" />
               <p>{{ item.label }}</p>
             </div>
             <span class="pointer">
               <font-awesome-icon icon="fa-solid fa-xmark" />
-              <!-- <svg-icon
-                icon="icon-column-add"
-                width="14px"
-                height="14px"
-                role="img"
-              /> -->
             </span>
           </div>
         </div>
@@ -69,65 +56,50 @@
             Display Columns
             <span class="subHeader">({{ displayColumns }})</span>
           </p>
-          <p class="select-button" @click="selectAllDisplayColumns">
+          <p class="select-button"
+             @click="selectAllDisplayColumns">
             {{
               displayColumnsSelected && data.length != 0
-                ? "Deselect all"
-                : "Select all"
+              ? "Deselect all"
+              : "Select all"
             }}
           </p>
         </div>
-        <div
-          id="display-columns"
-          class="container"
-          @dragenter.prevent
-          @dragover.prevent
-          @drop="ondropitem($event, 'second')"
-        >
-          <!-- :class="{ selected: isSelected(column.label) }"
-            v-for="column in displayColumns"
-            :key="column.key"
-            :data-order="column.order"
-            @dragstart="dragStart($event, column)"
-            @click="onItemClick(column)"
-            :draggable="true" -->
-          <div
-            class="column"
-            v-for="(item, index) in data"
-            :key="index"
-            :class="{ selected: isSelected(item.id) }"
-            :draggable="true"
-            @dragstart="onDragStart(item, index, $event, 'data')"
-            @drop.stop="handleDrop(item, index, $event)"
-            @click="onItemClick(item.id)"
-          >
-            <div class="column__name">
+        <div id="display-columns"
+             class="container"
+             @dragenter.prevent
+             @dragover.prevent
+             @drop="ondropitem($event, 'second')">
+          <div class="column"
+               v-for="(item, index) in data"
+               :key="index"
+               :style="item.style"
+               :class="{ selected: isSelected(item.id) }"
+               :draggable="true"
+               @dragstart="onDragStart(item, index, $event, 'data')"
+               @click="onItemClick(item.id)">
+            <div class="column__name"
+                 @drop.stop="handleDrop(item, index, $event)">
               <font-awesome-icon icon="fa-solid fa-grip" />
-              <!-- <svg-icon
-                icon="icon-DragNDrop"
-                width="12px"
-                height="12px"
-                role="presentation"
-              /> -->
+
               <p>{{ item.label }}</p>
             </div>
             <span class="pointer">
               <font-awesome-icon icon="fa-solid fa-check" />
-              <!-- <svg-icon
-                icon="icon-column-hide"
-                width="14px"
-                height="14px"
-                role="img"
-              /> -->
+
             </span>
           </div>
         </div>
-        <p class="select-button reset-button" @click="resetToDefault">Reset</p>
+        <p class="select-button reset-button"
+           @click="resetToDefault">Reset</p>
       </div>
     </div>
-    <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="submit">Apply</el-button>
-      <el-button type="text" @click="handleClose">Cancel </el-button>
+    <div slot="footer"
+         class="dialog-footer">
+      <el-button type="primary"
+                 @click="submit">Apply</el-button>
+      <el-button type="text"
+                 @click="handleClose">Cancel </el-button>
     </div>
   </el-dialog>
 </template>
@@ -153,7 +125,8 @@ export default {
       type: String,
     },
   },
-  data() {
+  data()
+  {
     return {
       items: [],
       selectedItems: [],
@@ -188,18 +161,36 @@ export default {
     //   }
     //   return true;
     // },
-    displayColumns() {
+    displayColumns()
+    {
       return this.data.length;
     },
-    hideColumns() {
+    hideColumns()
+    {
       return this.items.length;
     },
   },
   methods: {
-    isSelected(id) {
+    handleDragOver(e)
+    {
+      let itemIndex = this.data.findIndex((x) => x.label.toLowerCase() == e.dataTransfer.types[0])
+      if (itemIndex != -1)
+      {
+        this.items.splice(itemIndex, 0, { ...this.data[itemIndex] })
+        this.data.splice(itemIndex, 1)
+      }
+    },
+    isSelected(id)
+    {
       return this.selectedItems.includes(id);
     },
-    onDragStart(item, index, evt, arrayName) {
+    onDragStart(item, index, evt, arrayName)
+    {
+      // evt.target.style.opacity = "0.4";
+      // evt.target.style.border = "1px solid green";
+      // evt.target.style.position = 'relative'
+      // evt.target.style.left = evt.target.clientX
+      // this.$refs.dragSource.$el.remove()
       evt.dataTransfer.dropEffect = "move";
       evt.dataTransfer.effectAllowed = "move";
 
@@ -207,33 +198,43 @@ export default {
       this.displayColumnsSelected = false;
       this.selectedColumns = [];
 
-      if (arrayName == "items") {
-        if (this.selectedItems.length > 0) {
-          this.items.forEach((x) => {
-            if (this.selectedItems.includes(x.id)) {
+      if (arrayName == "items")
+      {
+        if (this.selectedItems.length > 0)
+        {
+          this.items.forEach((x) =>
+          {
+            if (this.selectedItems.includes(x.id))
+            {
               evt.dataTransfer.setData(
                 x.label,
                 JSON.stringify({ id: x.id, index: index })
               );
             }
           });
-        } else {
+        } else
+        {
           evt.dataTransfer.setData(
             item.label,
             JSON.stringify({ id: item.id, index: index })
           );
         }
-      } else {
-        if (this.selectedItems.length > 0) {
-          this.data.forEach((x) => {
-            if (this.selectedItems.includes(x.id)) {
+      } else
+      {
+        if (this.selectedItems.length > 0)
+        {
+          this.data.forEach((x) =>
+          {
+            if (this.selectedItems.includes(x.id))
+            {
               evt.dataTransfer.setData(
                 x.label,
                 JSON.stringify({ id: x.id, index: index })
               );
             }
           });
-        } else {
+        } else
+        {
           evt.dataTransfer.setData(
             item.label,
             JSON.stringify({ id: item.id, index: index })
@@ -243,7 +244,10 @@ export default {
 
       this.selectedItems = [];
     },
-    onDragEnd(index, event) {
+    onDragEnd(index, event)
+    {
+      // event.target.style.opacity = "1";
+      // event.target.style.border = "unset";
       const draggedIndex = JSON.parse(event.dataTransfer.getData("text"));
       const draggedItem = { ...this.items[draggedIndex.index] };
       const items = [...this.items];
@@ -252,38 +256,53 @@ export default {
       this.items = items.map((item, index) => ({ ...item, id: index }));
     },
 
-    ondropitem(event, payload) {
+    ondropitem(event, payload)
+    {
+
       let IdContainer = new Set();
 
-      if (payload == "second") {
-        this.items.forEach((x) => {
+      if (payload == "second")
+      {
+        this.items.forEach((x) =>
+        {
           let data = event.dataTransfer.getData(x.label);
-          if (data && JSON.parse(data).id == x.id) {
+          if (data && JSON.parse(data).id == x.id)
+          {
             IdContainer.add(x.id);
           }
         });
         this.items = this.items
-          .map((x) => {
-            if (IdContainer.has(x.id)) {
+          .map((x) =>
+          {
+            if (IdContainer.has(x.id))
+            {
               this.data.push({ ...x });
-            } else {
+            } else
+            {
               return x;
             }
           })
           .filter(Boolean);
         this.selected = [];
-      } else {
-        this.data.forEach((x) => {
+      } else
+      {
+        this.data.forEach((x) =>
+        {
           let data = event.dataTransfer.getData(x.label);
-          if (data && JSON.parse(data).id == x.id) {
+          console.log(data)
+          if (data && JSON.parse(data).id == x.id)
+          {
             IdContainer.add(x.id);
           }
         });
         this.data = this.data
-          .map((x) => {
-            if (IdContainer.has(x.id)) {
+          .map((x) =>
+          {
+            if (IdContainer.has(x.id))
+            {
               this.items.push({ ...x });
-            } else {
+            } else
+            {
               return x;
             }
           })
@@ -291,24 +310,30 @@ export default {
       }
     },
 
-    handleDrop(item, index, evt) {
+    handleDrop(item, index, evt)
+    {
       let IdContainer = [];
-      this.data.forEach((x) => {
+      this.data.forEach((x) =>
+      {
         let data = evt.dataTransfer.getData(x.label);
-        if (data && JSON.parse(data).id == x.id) {
+        if (data && JSON.parse(data).id == x.id)
+        {
           IdContainer.push(JSON.parse(data).id);
         }
       });
       let itemIndex = this.data.findIndex((x) => x.id == IdContainer[0]);
-      if (itemIndex != -1) {
+      if (itemIndex != -1)
+      {
         const draggedItem = this.data[itemIndex];
         let items = this.data;
         items.splice(itemIndex, 1, item);
         items.splice(index, 1, { ...draggedItem });
         this.data = items;
-      } else {
+      } else
+      {
         let ab = this.items.findIndex((x) => x.id == IdContainer[0]);
-        if (ab != -1) {
+        if (ab != -1)
+        {
           let item = { ...this.items[ab] };
           this.items.splice(ab, 1);
           this.data.push({ ...item });
@@ -316,25 +341,31 @@ export default {
       }
     },
 
-    dropOnChild(item, index, evt) {
+    dropOnChild(item, index, evt)
+    {
       let IdContainer = [];
-      this.items.forEach((x) => {
+      this.items.forEach((x) =>
+      {
         let data = evt.dataTransfer.getData(x.label);
-        if (data && JSON.parse(data).id == x.id) {
+        if (data && JSON.parse(data).id == x.id)
+        {
           IdContainer.push(JSON.parse(data).id);
         }
       });
 
       let itemIndex = this.items.findIndex((x) => x.id == IdContainer[0]);
-      if (itemIndex != -1) {
+      if (itemIndex != -1)
+      {
         const draggedItem = this.items[itemIndex];
         let items = this.items;
         items.splice(itemIndex, 1, item);
         items.splice(index, 1, { ...draggedItem });
         this.items = [...items];
-      } else {
+      } else
+      {
         let ab = this.data.findIndex((x) => x.id == IdContainer[0]);
-        if (ab != -1) {
+        if (ab != -1)
+        {
           let item = { ...this.data[ab] };
           this.data.splice(ab, 1);
           this.items.push({ ...item });
@@ -342,17 +373,21 @@ export default {
       }
     },
 
-    onItemClick(id) {
-      if (this.selectedItems.includes(id)) {
+    onItemClick(id)
+    {
+      if (this.selectedItems.includes(id))
+      {
         // deselect item
         this.selectedItems = this.selectedItems.filter((i) => i !== id);
-      } else {
+      } else
+      {
         // select item
         this.selectedItems.push(id);
       }
     },
 
-    submit() {
+    submit()
+    {
       this.$emit(
         "changeTableColumns",
         this.data.map((x) => x.id)
@@ -393,31 +428,40 @@ export default {
     // isSelected(label) {
     //   return this.selectedItems.includes(label);
     // },
-    handleClose() {
+    handleClose()
+    {
       this.$emit("closeColumnSelector");
     },
-    handleOpen() {
+    handleOpen()
+    {
       this.componentSelectedColumns = this.selectedColumns;
     },
-    selectAllHiddenColumns() {
-      if (!this.hideColumnsSelectAll) {
+    selectAllHiddenColumns()
+    {
+      if (!this.hideColumnsSelectAll)
+      {
         this.selectedItems = this.items.map((x) => x.id);
         this.hideColumnsSelectAll = true;
-      } else {
+      } else
+      {
         this.hideColumnsSelectAll = false;
         this.selectedItems = [];
       }
     },
-    selectAllDisplayColumns() {
-      if (!this.displayColumnsSelected) {
+    selectAllDisplayColumns()
+    {
+      if (!this.displayColumnsSelected)
+      {
         this.selectedItems = this.data.map((x) => x.id);
         this.displayColumnsSelected = true;
-      } else {
+      } else
+      {
         this.displayColumnsSelected = false;
         this.selectedItems = [];
       }
     },
-    resetToDefault() {
+    resetToDefault()
+    {
       // this.componentSelectedColumns = this.selectedColumns;
       // this.displayColumnLength = this.selectedColumns.length;
       // this.hideColumnLength =
