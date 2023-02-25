@@ -28,7 +28,7 @@
         <!-- @dragenter.prevent -->
         <div id="hide-columns"
              class="container"
-             @dragover.prevent="handleDragOver($event)"
+             @dragover.prevent="handleDragOver($event, 'items')"
              @dragenter.prevent
              @drop="ondropitem($event, 'first')">
 
@@ -38,7 +38,7 @@
                :class="{ selected: isSelected(item.id) }"
                :draggable="true"
                @dragstart="onDragStart(item, index, $event, 'items')"
-               @drop.stop="dropOnChild(item, index, $event)"
+               @drop="dropOnChild(item, index, $event)"
                @click="onItemClick(item.id)">
             <div class="column__name">
               <font-awesome-icon icon="fa-solid fa-grip" />
@@ -67,8 +67,8 @@
         </div>
         <div id="display-columns"
              class="container"
+             @dragover.prevent="handleDragOver($event, 'data')"
              @dragenter.prevent
-             @dragover.prevent
              @drop="ondropitem($event, 'second')">
           <div class="column"
                v-for="(item, index) in data"
@@ -77,9 +77,9 @@
                :class="{ selected: isSelected(item.id) }"
                :draggable="true"
                @dragstart="onDragStart(item, index, $event, 'data')"
+               @drop="handleDrop(item, index, $event)"
                @click="onItemClick(item.id)">
-            <div class="column__name"
-                 @drop.stop="handleDrop(item, index, $event)">
+            <div class="column__name">
               <font-awesome-icon icon="fa-solid fa-grip" />
 
               <p>{{ item.label }}</p>
@@ -171,14 +171,28 @@ export default {
     },
   },
   methods: {
-    handleDragOver(e)
+    handleDragOver(e, arrayName)
     {
-      let itemIndex = this.data.findIndex((x) => x.label.toLowerCase() == e.dataTransfer.types[0])
-      if (itemIndex != -1)
+      console.log(arrayName)
+      if (arrayName == "items")
       {
-        this.items.splice(itemIndex, 0, { ...this.data[itemIndex] })
-        this.data.splice(itemIndex, 1)
+        let itemIndex = this.data.findIndex((x) => x.label.toLowerCase() == e.dataTransfer.types[0])
+        if (itemIndex != -1)
+        {
+          this.items.splice(itemIndex, 0, { ...this.data[itemIndex] })
+          this.data.splice(itemIndex, 1)
+        }
       }
+      if ((arrayName == "data"))
+      {
+        let itemIndex = this.items.findIndex((x) => x.label.toLowerCase() == e.dataTransfer.types[0])
+        if (itemIndex != -1)
+        {
+          this.data.splice(itemIndex, 0, { ...this.items[itemIndex] })
+          this.data.splice(itemIndex, 1)
+        }
+      }
+
     },
     isSelected(id)
     {
