@@ -189,7 +189,7 @@ export default {
         if (itemIndex != -1)
         {
           this.data.splice(itemIndex, 0, { ...this.items[itemIndex] })
-          this.data.splice(itemIndex, 1)
+          this.items.splice(itemIndex, 1)
         }
       }
 
@@ -200,11 +200,6 @@ export default {
     },
     onDragStart(item, index, evt, arrayName)
     {
-      // evt.target.style.opacity = "0.4";
-      // evt.target.style.border = "1px solid green";
-      // evt.target.style.position = 'relative'
-      // evt.target.style.left = evt.target.clientX
-      // this.$refs.dragSource.$el.remove()
       evt.dataTransfer.dropEffect = "move";
       evt.dataTransfer.effectAllowed = "move";
 
@@ -342,7 +337,7 @@ export default {
         let items = this.data;
         items.splice(itemIndex, 1, item);
         items.splice(index, 1, { ...draggedItem });
-        this.data = items;
+        this.data = [...items];
       } else
       {
         let ab = this.items.findIndex((x) => x.id == IdContainer[0]);
